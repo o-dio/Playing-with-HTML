@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dioniso's TikTok Video Player</title>
+    
+    <style>
+        html{
+            height: 100%;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+        body{
+            margin: 0%;
+            display: flex;
+            height: 100%;
+        }
+        .aside{
+            background-color:#C2C4F2;
+            display: none;
+            flex: 1;
+        }
+        .content{
+            padding: 1%;
+            background-color: #AEB2F2;
+            display:flex;
+            flex-direction: column;
+            align-items:center;
+            justify-content: space-evenly;
+            flex:3;
+            border: solid #65678C;
+            border-width: 0px 3px;
+            
+        }
+        form{
+            padding: 2%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+            border: ridge #65678C;
+            border-width: 4px;
+            background-color: #C2C4F2;
+            border-radius: 20px;
+        }
+        iframe{
+            border-radius: 3%;
+            border: ridge #65678C;
+            border-width: 4px;
+            width: 90%;
+            height: 70%;
+        }
+        label{
+            text-align: center;
+        }
+        #link{
+            border-radius: 8px;
+        }
+        #button{
+            background-color:#AEB2F2;
+            border: 1px solid #404259;
+            border-radius: 10px;
+            padding: 1% 10%;
+        }
+        #button:hover{
+            background-color: #65678C   ;
+        }
+        #button:active{
+            background-color: #404259;
+        }
+        @media screen and (min-width: 800px) {
+            .aside{
+                display: block;
+            }
+            iframe{
+                width: 70%;
+                height: 70%;
+            }
+        }
+    </style>
+    
+    <script>
+        function procurar(){
+            event.preventDefault();
+            const input = document.getElementById("link").value;
+            if(!input || input.length === 0 || input === ""){alert("Não há link inserido!"); throw new Error("Empty URL");}
+            const inputURL = "https://www.tiktok.com/oembed?url=" + input;
+            var request = new XMLHttpRequest();
+            request.open("GET", inputURL);
+            request.responseType = "json";
+            request.send();
+            request.onload = () => {
+                var video = request.response;
+                openVideo(video);
+                return true;
+            }
+
+        }
+        function openVideo(jsonObj){
+            document.getElementById("video").src = "https://www.tiktok.com/player/v1/" + jsonObj["embed_product_id"];
+        }
+    </script>
+    
+</head>
+<body>
+
+    <div class="aside"></div>
+
+    <div class="content">
+        <form id="formulario" onsubmit="procurar()">
+            <label for="link">Insira aqui o link do TikTok que a Vitória te mandou:</label><br>
+            <input type="text" id="link" name="link"><br>
+            <button type="button" id="button" onclick="procurar()">Buscar</button>
+        </form>
+
+        <iframe id="video"
+        src="https://www.tiktok.com/player/v1/6718335390845095173">
+        </iframe>
+    </div>
+
+    <div class="aside"></div>
+
+</body>
+</html>
