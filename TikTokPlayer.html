@@ -84,17 +84,17 @@
             event.preventDefault();
             const input = document.getElementById("link").value;
             if(!input || input.length === 0 || input === ""){alert("Não há link inserido!"); throw new Error("Empty URL");}
-            const inputURL = "https://www.tiktok.com/oembed?url=" + input;
-            var request = new XMLHttpRequest();
-            request.open("GET", inputURL);
-            request.responseType = "json";
-            request.send();
-            request.onload = () => {
-                var video = request.response;
-                openVideo(video);
-                return true;
-            }
-
+            fetch("https://www.tiktok.com/oembed?url=" + input)
+                .then(response => {
+                    console.log("Status da Requisicao: ", response.status);
+                    if(!response.ok) {
+                        alert("Video nao encontrado!");
+                        throw new Error(response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => openVideo(data))
+                .catch(error => {alert("Video nao encontrado!"); console.log(error)});
         }
         function openVideo(jsonObj){
             document.getElementById("video").src = "https://www.tiktok.com/player/v1/" + jsonObj["embed_product_id"];
